@@ -35,6 +35,7 @@ This prototype helps small/medium businesses understand why their products are i
 ```
 2026-HBCU-BOTB/
 ├── run.sh                     # single command to install + launch
+├── run.ps1                    # Windows PowerShell launcher
 ├── README.md
 ├── requirements.txt
 ├── config.py                  # model name + reusable prompt templates
@@ -428,6 +429,25 @@ DEBUG_MODE=1 ./run.sh
 ```
 
 In debug mode, the app uses deterministic mock AI responses and mock recommendations instead of live Claude API calls.
+
+### Windows Setup
+
+On Windows PowerShell, use:
+
+```powershell
+python -m pip install -r requirements.txt
+$env:DEBUG_MODE="1"
+.\run.ps1
+```
+
+For live Claude calls on Windows:
+
+```powershell
+$env:ANTHROPIC_API_KEY="your_key_here"
+.\run.ps1
+```
+
+VS Code users can also use the `Streamlit Debug Mode` or `Streamlit Live Claude` launch configurations in `.vscode/launch.json`.
 
 ---
 
