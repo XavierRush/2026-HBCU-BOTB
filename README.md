@@ -33,11 +33,11 @@ This prototype helps small/medium businesses understand why their products are i
 ## Project Structure
 
 ```
-visibility-analyzer/
-├── run.sh                  # single command to install + launch
+2026-HBCU-BOTB/
+├── run.sh                     # single command to install + launch
 ├── README.md
 ├── requirements.txt
-├── config.py               # API keys, model name, prompt templates
+├── config.py                  # model name + reusable prompt templates
 ├── data/
 │   └── sample_products.json   # seed data for demo
 ├── core/
@@ -89,10 +89,11 @@ QUERY_TEMPLATES = [
     "Recommend a good {category} for someone on a budget.",
     "What {category} do most people buy online?",
     "Is {brand} {product_name} a good choice for {category}?",  # direct query
+    "How does {brand} {product_name} compare to {brand} {product_name}?",
 ]
 
 def build_queries(product: Product) -> list[str]:
-    """Generate 4 queries: 3 generalized, 1 direct brand mention."""
+    """Generate 5 queries: 3 generalized, 1 direct brand mention, 1 comparison query."""
     price_ceiling = round(product.price * 1.25 / 10) * 10  # nearest $10 above price
     return [
         QUERY_TEMPLATES[0].format(category=product.category, price_ceiling=price_ceiling),
@@ -102,6 +103,10 @@ def build_queries(product: Product) -> list[str]:
             brand=product.brand,
             product_name=product.name,
             category=product.category
+        ),
+        QUERY_TEMPLATES[4].format(
+            brand=product.brand,
+            product_name=product.name
         ),
     ]
 
@@ -382,7 +387,7 @@ torch>=2.0.0
 #!/bin/bash
 echo "Installing dependencies..."
 pip install -r requirements.txt --quiet
-python -m spacy download en_core_web_sm --quiet
+python3 -m spacy download en_core_web_sm --quiet
 
 echo "Checking API key..."
 if [ -z "$ANTHROPIC_API_KEY" ]; then
@@ -404,7 +409,7 @@ echo "App running at http://localhost:8501"
 ```bash
 # Clone and enter the repo
 git clone <your-repo-url>
-cd visibility-analyzer
+cd 2026-HBCU-BOTB
 
 # Set your API key
 export ANTHROPIC_API_KEY=your_key_here
@@ -413,6 +418,16 @@ export ANTHROPIC_API_KEY=your_key_here
 chmod +x run.sh
 ./run.sh
 ```
+
+### Debug Mode
+
+If you want to demo the app without a Claude key, run:
+
+```bash
+DEBUG_MODE=1 ./run.sh
+```
+
+In debug mode, the app uses deterministic mock AI responses and mock recommendations instead of live Claude API calls.
 
 ---
 

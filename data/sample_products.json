@@ -1,0 +1,20 @@
+[
+  {
+    "name": "MechPro K75 Keyboard",
+    "category": "gaming keyboard",
+    "brand": "MechPro",
+    "price": 89.99,
+    "key_features": ["mechanical switches", "RGB backlight", "TKL layout", "USB-C"],
+    "description": "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable.",
+    "availability": "in stock"
+  },
+  {
+    "name": "ClearView UV Protection Window Tint Kit",
+    "category": "car window tint",
+    "brand": "ClearView",
+    "price": 34.99,
+    "key_features": ["UV protection", "DIY install", "bubble-free film", "legal tint levels"],
+    "description": "ClearView's window tint kit offers 35% VLT UV-blocking film for a clean, professional finish. Pre-cut for most sedan models.",
+    "availability": "in stock"
+  }
+]
