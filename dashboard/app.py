@@ -10,6 +10,10 @@ from core.product_schema import Product
 from core.query_engine import run_all_queries
 from core.recommender import generate_recommendations
 
+DEPLOY_REPO_URL = "https://github.com/Justintimefordinner/2026-HBCU-BOTB"
+DEPLOY_WORKSPACE_URL = "https://share.streamlit.io/"
+DEPLOY_ENTRYPOINT = "dashboard/app.py"
+
 st.set_page_config(page_title="AI Visibility Analyzer", layout="wide")
 st.title("AI Visibility Analyzer")
 st.caption("Understand why your product is not showing up in AI-assisted shopping results.")
@@ -34,6 +38,17 @@ with st.sidebar:
     )
     availability = st.selectbox("Availability", ["in stock", "out of stock"])
     run = st.button("Analyze Visibility", type="primary")
+    st.divider()
+    st.subheader("Deploy App")
+    st.link_button(
+        "Deploy on Streamlit Community Cloud",
+        DEPLOY_WORKSPACE_URL,
+        type="secondary",
+        use_container_width=True,
+        help="Open Community Cloud to create or manage the deployment for this repository.",
+    )
+    st.caption(f"Repo: {DEPLOY_REPO_URL}")
+    st.caption(f"Entrypoint: {DEPLOY_ENTRYPOINT}")
 
 if run:
     product = Product(

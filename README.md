@@ -412,7 +412,7 @@ echo "App running at http://localhost:8501"
 git clone <your-repo-url>
 cd 2026-HBCU-BOTB
 
-# Create local env file (recommended)
+# Create local env file (recommended for local development)
 cp .env.example .env
 # Then edit .env and set ANTHROPIC_API_KEY
 
@@ -433,6 +433,24 @@ DEBUG_MODE=1 ./run.sh
 ```
 
 In debug mode, the app uses deterministic mock AI responses and mock recommendations instead of live Claude API calls.
+
+### Streamlit Deployment Secrets
+
+For Streamlit Community Cloud or any deployment that supports `st.secrets`, add these keys in the app's secrets settings:
+
+```toml
+ANTHROPIC_API_KEY = "your_key_here"
+ANTHROPIC_MODEL = "claude-sonnet-4-20250514"
+DEBUG_MODE = "0"
+```
+
+The app now resolves settings in this order:
+
+1. Real environment variables
+2. Streamlit secrets
+3. Local `.env`
+
+For local testing with Streamlit-style secrets, copy [`.streamlit/secrets.toml.example`](/home/jwright/BOTB/2026-HBCU-BOTB/.streamlit/secrets.toml.example) to `.streamlit/secrets.toml` and fill in your values. That file is gitignored.
 
 ### Windows Setup
 
