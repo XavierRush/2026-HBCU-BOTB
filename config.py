@@ -3,6 +3,16 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+ENV_FILE = PROJECT_ROOT / ".env"
+
+# Load .env from the repo root without overriding real environment variables.
+load_dotenv(ENV_FILE, override=False)
 
 DEBUG_MODE = os.getenv("DEBUG_MODE", "0").lower() in {"1", "true", "yes", "on"}
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")

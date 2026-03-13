@@ -412,7 +412,11 @@ echo "App running at http://localhost:8501"
 git clone <your-repo-url>
 cd 2026-HBCU-BOTB
 
-# Set your API key
+# Create local env file (recommended)
+cp .env.example .env
+# Then edit .env and set ANTHROPIC_API_KEY
+
+# OR set your API key directly in shell
 export ANTHROPIC_API_KEY=your_key_here
 
 # Launch everything
@@ -443,6 +447,8 @@ $env:DEBUG_MODE="1"
 For live Claude calls on Windows:
 
 ```powershell
+# Recommended: copy .env.example to .env and set ANTHROPIC_API_KEY there
+# Or set it directly:
 $env:ANTHROPIC_API_KEY="your_key_here"
 .\run.ps1
 ```
