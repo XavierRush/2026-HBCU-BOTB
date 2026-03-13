@@ -46,3 +46,11 @@ def run_all_queries(product: Product) -> dict[str, str]:
         }
 
     return {query: query_llm(query) for query in build_queries(product)}
+
+
+def run_multi_llm_queries(product: Product) -> dict[str, dict[str, str]]:
+    """Return a mapping of prompt to responses from multiple LLMs."""
+    from core.multi_llm_query import MultiLLMQueryEngine
+
+    engine = MultiLLMQueryEngine()
+    return engine.query_product_recommendations(product)

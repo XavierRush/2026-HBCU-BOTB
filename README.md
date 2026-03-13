@@ -45,6 +45,7 @@ This prototype helps small/medium businesses understand why their products are i
 │   ├── __init__.py
 │   ├── product_schema.py      # Pydantic product model
 │   ├── query_engine.py        # sends prompts to Claude API
+│   ├── multi_llm_query.py     # queries multiple LLMs (OpenAI, Gemini, Perplexity)
 │   ├── nlp_analyzer.py        # NLP comparison + gap detection
 │   └── recommender.py         # generates fix recommendations
 ├── dashboard/
@@ -124,6 +125,39 @@ def run_all_queries(product: Product) -> dict:
     """Returns dict of {query_string: llm_response} for all templates."""
     queries = build_queries(product)
     return {q: query_llm(q) for q in queries}
+```
+
+### Multi-LLM Query Engine (`core/multi_llm_query.py`)
+
+For enhanced analysis, query multiple LLMs instead of just Claude. This allows Claude to orchestrate queries to OpenAI ChatGPT, Google Gemini, and Perplexity.
+
+**Setup:** Add API keys to `.env`:
+```
+OPENAI_API_KEY=your_openai_key
+GOOGLE_API_KEY=your_google_key
+PERPLEXITY_API_KEY=your_perplexity_key
+```
+
+**Usage:**
+```python
+from core.multi_llm_query import MultiLLMQueryEngine
+
+engine = MultiLLMQueryEngine()
+responses = engine.query_all_llms("What are the best gaming keyboards under $100?")
+# Returns: {"chatgpt": "...", "gemini": "...", "perplexity": "..."}
+
+# Or for product recommendations:
+results = engine.query_product_recommendations(product)
+# Returns nested dict: {query: {"chatgpt": "...", "gemini": "...", "perplexity": "..."}}
+```
+
+**Command Line:**
+```bash
+# Direct query
+python core/multi_llm_query.py "What are the best gaming keyboards?"
+
+# Product-based queries
+python core/multi_llm_query.py --product "MechPro K75" --brand "MechPro" --category "gaming keyboard" --price 89.99 --features "mechanical switches,RGB backlight" --description "Tenkeyless mechanical keyboard"
 ```
 
 ### Step 3 — NLP Analyzer (`core/nlp_analyzer.py`)
