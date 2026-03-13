@@ -7,7 +7,19 @@ from collections import deque
 from collections.abc import Iterable, Sequence
 from typing import Any
 
-from config import ANTHROPIC_INPUT_TOKENS_PER_MINUTE
+from config import (
+    ANTHROPIC_INPUT_TOKEN_BUDGET_RATIO,
+    ANTHROPIC_INPUT_TOKENS_PER_MINUTE,
+)
+
+REQUEST_TOKEN_OVERHEAD = 64
+MESSAGE_TOKEN_OVERHEAD = 12
+EFFECTIVE_INPUT_TOKEN_BUDGET = max(
+    1,
+    math.floor(
+        ANTHROPIC_INPUT_TOKENS_PER_MINUTE * ANTHROPIC_INPUT_TOKEN_BUDGET_RATIO
+    ),
+)
 
 
 def _stringify_content_block(block: Any) -> str:
@@ -49,11 +61,14 @@ def extract_message_text(messages: Sequence[dict[str, Any]] | None) -> str:
 
 
 def estimate_input_tokens(messages: Sequence[dict[str, Any]] | None) -> int:
-    """Conservatively estimate prompt tokens from text length."""
-    text = extract_message_text(messages)
-    if not text:
+    """Strictly estimate prompt tokens from text length and message overhead."""
+    if not messages:
         return 0
-    return max(1, math.ceil(len(text) / 3))
+
+    text = extract_message_text(messages)
+    text_tokens = math.ceil(len(text) / 2)
+    overhead_tokens = REQUEST_TOKEN_OVERHEAD + (len(messages) * MESSAGE_TOKEN_OVERHEAD)
+    return max(1, text_tokens + overhead_tokens)
 
 
 class InputTokenRateLimiter:
@@ -104,7 +119,7 @@ class InputTokenRateLimiter:
 
 
 anthropic_input_rate_limiter = InputTokenRateLimiter(
-    ANTHROPIC_INPUT_TOKENS_PER_MINUTE
+    EFFECTIVE_INPUT_TOKEN_BUDGET
 )
 
 

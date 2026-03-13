@@ -92,3 +92,19 @@ def test_input_token_rate_limiter_rejects_oversized_prompt() -> None:
         assert "input token budget" in str(exc)
     else:
         raise AssertionError("Expected oversized prompts to be rejected.")
+
+
+def test_estimate_input_tokens_is_stricter_than_raw_text_ratio() -> None:
+    estimated = anthropic_rate_limit.estimate_input_tokens(
+        [{"role": "user", "content": "abcdefghij"}]
+    )
+
+    assert estimated == (
+        anthropic_rate_limit.REQUEST_TOKEN_OVERHEAD
+        + anthropic_rate_limit.MESSAGE_TOKEN_OVERHEAD
+        + 5
+    )
+
+
+def test_effective_input_budget_applies_safety_margin() -> None:
+    assert anthropic_rate_limit.EFFECTIVE_INPUT_TOKEN_BUDGET == 18000
