@@ -31,9 +31,10 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY", "")
 
 QUERY_TEMPLATES = [
-    "What are the best {category} under ${price_ceiling}?",
-    "Recommend a good {category} for someone on a budget.",
-    "What {category} do most people buy online?",
-    "Is {brand} {product_name} a good choice for {category}?",
-    "How does {brand} {product_name} compare to {brand} {product_name}?",
+    "What are the best {category} options under ${price_ceiling} for shoppers who care about durability, warranty, and delivery readiness?",
+    "Recommend a {category} for a buyer comparing safety, portability, and long-term value.",
+    "Which {category} is most often recommended online for buyers who want clear specs and trustworthy product details?",
+    "Is {brand} {product_name} a good choice for someone shopping for a {category} and weighing quality, shipping, and warranty coverage?",
+    "Compare {brand} {product_name} vs {competitor_brand} {competitor_name} for a shopper choosing a {category}. Focus on construction, portability, warranty, and use case fit.",
+    "Between {brand} {product_name} and {competitor_brand} {competitor_name}, which is the better pick for a {category} buyer who wants trustworthy specs and fewer tradeoffs?",
 ]

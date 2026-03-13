@@ -14,10 +14,27 @@ from config import (
 from core.debug_mode import mock_query_response
 from core.product_schema import Product
 
+COMPETITOR_BRAND = "GUNNER"
+COMPETITOR_NAME = "G1 Kennel Black"
+
+
+def get_competitor_context(product: Product) -> dict[str, str]:
+    """Return the comparison target for the selected product."""
+    if product.brand == "Rock Creek Crates":
+        return {
+            "competitor_brand": COMPETITOR_BRAND,
+            "competitor_name": COMPETITOR_NAME,
+        }
+    return {
+        "competitor_brand": "Rock Creek Crates",
+        "competitor_name": "Collapsible Dog Crate",
+    }
+
 
 def build_queries(product: Product) -> list[str]:
-    """Generate generalized, direct, and comparison-style queries."""
+    """Generate robust shopping-style, direct, and head-to-head queries."""
     price_ceiling = round(product.price * 1.25 / 10) * 10
+    competitor = get_competitor_context(product)
     return [
         QUERY_TEMPLATES[0].format(category=product.category, price_ceiling=price_ceiling),
         QUERY_TEMPLATES[1].format(category=product.category),
@@ -30,6 +47,14 @@ def build_queries(product: Product) -> list[str]:
         QUERY_TEMPLATES[4].format(
             brand=product.brand,
             product_name=product.name,
+            category=product.category,
+            **competitor,
+        ),
+        QUERY_TEMPLATES[5].format(
+            brand=product.brand,
+            product_name=product.name,
+            category=product.category,
+            **competitor,
         ),
     ]
 

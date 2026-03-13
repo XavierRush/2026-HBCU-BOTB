@@ -1,5 +1,6 @@
 from core.product_schema import Product
 from core.debug_mode import mock_query_response, mock_recommendations
+from core.query_engine import build_queries
 
 
 def test_product_schema_accepts_required_fields():
@@ -53,3 +54,22 @@ def test_mock_recommendations_returns_visibility_guidance():
 
     assert "Visibility Fixes" in recommendations
     assert "RGB backlight" in recommendations
+
+
+def test_build_queries_compares_rock_creek_to_gunner():
+    product = Product(
+        name="Collapsible Dog Crate",
+        category="collapsible dog crate",
+        brand="Rock Creek Crates",
+        price=650.0,
+        key_features=["collapsible design", "powder-coated aluminum"],
+        description="Durable collapsible crate.",
+        availability="in stock",
+    )
+
+    queries = build_queries(product)
+
+    comparison_queries = [query for query in queries if "GUNNER G1 Kennel Black" in query]
+
+    assert len(queries) == 6
+    assert len(comparison_queries) == 2
