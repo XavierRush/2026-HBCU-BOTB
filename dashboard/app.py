@@ -1,16 +1,113 @@
 from __future__ import annotations
 
+import html
 import json
 
 import streamlit as st
 
 from config import DEBUG_MODE
+from core.multi_llm_query import MultiLLMQueryEngine
 from core.nlp_analyzer import aggregate_results
 from core.product_schema import Product
 from core.query_engine import run_all_queries
 from core.recommender import generate_recommendations
 
 st.set_page_config(page_title="AI Visibility Analyzer", layout="wide")
+
+st.markdown(
+    """
+    <style>
+    .llm-card {
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+        min-height: 320px;
+        overflow: hidden;
+    }
+    .llm-card__header {
+        padding: 0.9rem 1rem 0.75rem;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0f172a;
+        background: rgba(241, 245, 249, 0.85);
+    }
+    .llm-card__body {
+        height: 250px;
+        overflow-y: auto;
+        padding: 1rem;
+        color: #1e293b;
+        line-height: 1.55;
+        white-space: pre-wrap;
+        font-size: 0.95rem;
+    }
+    .llm-card__body::-webkit-scrollbar {
+        width: 8px;
+    }
+    .llm-card__body::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.8);
+        border-radius: 999px;
+    }
+    .llm-card--placeholder .llm-card__body {
+        background:
+            linear-gradient(90deg, rgba(191, 219, 254, 0.14), rgba(224, 231, 255, 0.32), rgba(191, 219, 254, 0.14));
+        background-size: 220% 100%;
+        animation: llm-placeholder-shimmer 2.4s ease-in-out infinite;
+    }
+    .llm-placeholder-line {
+        height: 0.9rem;
+        border-radius: 999px;
+        margin-bottom: 0.8rem;
+        background: rgba(148, 163, 184, 0.16);
+    }
+    .llm-placeholder-line:last-child {
+        margin-bottom: 0;
+    }
+    @keyframes llm-placeholder-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -20% 0; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+PROVIDER_ORDER = [
+    ("claude", "Claude Web Search"),
+    ("openai", "ChatGPT"),
+    ("gemini", "Gemini"),
+    ("perplexity", "Perplexity"),
+]
+
+
+def render_llm_card(title: str, content: str | None, placeholder: bool = False) -> None:
+    """Render a scrollable response card or a placeholder shimmer."""
+    if placeholder:
+        body = "".join(
+            f"<div class='llm-placeholder-line' style='width: {width};'></div>"
+            for width in ("92%", "84%", "88%", "76%", "81%", "69%")
+        )
+        card_class = "llm-card llm-card--placeholder"
+    else:
+        safe_content = html.escape(content or "")
+        body = safe_content if safe_content else "<span style='opacity:0.6;'>No response returned.</span>"
+        card_class = "llm-card"
+
+    st.markdown(
+        f"""
+        <div class="{card_class}">
+            <div class="llm-card__header">{html.escape(title)}</div>
+            <div class="llm-card__body">{body}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 st.title("AI Visibility Analyzer")
 st.caption("Understand why your product is not showing up in AI-assisted shopping results.")
 if DEBUG_MODE:
@@ -48,6 +145,10 @@ if run:
 
     with st.spinner("Querying AI models..."):
         query_results = run_all_queries(product)
+        multi_llm_engine = MultiLLMQueryEngine()
+        multi_llm_results = multi_llm_engine.query_product_recommendations(product)
+
+    available_multi_llms = set(multi_llm_engine.available_provider_names())
 
     with st.spinner("Running NLP analysis..."):
         analysis = aggregate_results(product, query_results)
@@ -85,8 +186,19 @@ if run:
                 st.warning("Potential hallucinations detected:")
                 for claim in result["hallucinated_claims"]:
                     st.write(f"- {claim}")
-            st.write("**AI Response:**")
-            st.write(query_results[query])
+            st.write("**LLM Responses:**")
+            card_columns = st.columns(len(PROVIDER_ORDER))
+            query_multi_llm_results = multi_llm_results.get(query, {})
+            for column, (provider_key, provider_title) in zip(card_columns, PROVIDER_ORDER):
+                with column:
+                    if provider_key == "claude":
+                        render_llm_card(provider_title, query_results[query])
+                    else:
+                        render_llm_card(
+                            provider_title,
+                            query_multi_llm_results.get(provider_key),
+                            placeholder=provider_key not in available_multi_llms,
+                        )
 
     st.divider()
     st.subheader("Recommendations to Improve Visibility")

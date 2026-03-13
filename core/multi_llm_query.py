@@ -1,130 +1,204 @@
-"""Multi-LLM Query Engine for product recommendations.
-
-This module allows querying multiple LLMs (OpenAI ChatGPT, Google Gemini, Perplexity)
-for product recommendations and data queries, orchestrated by Claude.
-"""
+"""Pluggable multi-LLM query engine for product recommendations."""
 
 from __future__ import annotations
 
+import argparse
 import json
-from typing import Dict, List, Optional
+from typing import Callable
 
-import google.generativeai as genai
-import openai
 import requests
 
-from config import DEBUG_MODE, GOOGLE_API_KEY, OPENAI_API_KEY, PERPLEXITY_API_KEY
-from core.debug_mode import mock_query_response
+from config import (
+    DEBUG_MODE,
+    GEMINI_MODEL,
+    GOOGLE_API_KEY,
+    MULTI_LLM_PROVIDERS,
+    OPENAI_API_KEY,
+    OPENAI_MODEL,
+    PERPLEXITY_API_KEY,
+    PERPLEXITY_MODEL,
+)
 from core.product_schema import Product
 
+try:
+    import google.generativeai as genai
+except ImportError:  # pragma: no cover - optional dependency
+    genai = None
 
-class MultiLLMQueryEngine:
-    """Engine for querying multiple LLMs for product recommendations."""
+try:
+    import openai
+except ImportError:  # pragma: no cover - optional dependency
+    openai = None
+
+class LLMProvider:
+    """Base class for pluggable LLM providers."""
+
+    name = "provider"
+
+    def is_available(self) -> bool:
+        """Return whether the provider is configured and usable."""
+        raise NotImplementedError
+
+    def query(self, prompt: str) -> str:
+        """Send a prompt to the provider and return its response."""
+        raise NotImplementedError
+
+
+class OpenAIProvider(LLMProvider):
+    """OpenAI-backed provider."""
+
+    name = "openai"
 
     def __init__(self):
-        self.openai_client = openai.OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
-        if GOOGLE_API_KEY:
-            genai.configure(api_key=GOOGLE_API_KEY)
-            self.gemini_model = genai.GenerativeModel('gemini-pro')
-        else:
-            self.gemini_model = None
+        self._client = None
+        if OPENAI_API_KEY and openai is not None:
+            self._client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
-    def query_chatgpt(self, prompt: str) -> str:
-        """Query OpenAI ChatGPT."""
-        if not self.openai_client:
-            return "OpenAI API key not configured"
+    def is_available(self) -> bool:
+        return DEBUG_MODE or self._client is not None
 
+    def query(self, prompt: str) -> str:
         if DEBUG_MODE:
-            return f"ChatGPT Debug: {prompt[:50]}..."
+            return f"OpenAI Debug: {prompt[:50]}..."
+        if not self._client:
+            return "OpenAI provider unavailable"
 
         try:
-            response = self.openai_client.chat.completions.create(
-                model="gpt-4",
+            response = self._client.chat.completions.create(
+                model=OPENAI_MODEL,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=1024,
-                temperature=0.7
+                temperature=0.7,
             )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f"ChatGPT Error: {str(e)}"
+            return response.choices[0].message.content or ""
+        except Exception as exc:  # pragma: no cover - network/API failure
+            return f"OpenAI Error: {exc}"
 
-    def query_gemini(self, prompt: str) -> str:
-        """Query Google Gemini."""
-        if not self.gemini_model:
-            return "Google API key not configured"
 
+class GeminiProvider(LLMProvider):
+    """Google Gemini-backed provider."""
+
+    name = "gemini"
+
+    def __init__(self):
+        self._model = None
+        if GOOGLE_API_KEY and genai is not None:
+            genai.configure(api_key=GOOGLE_API_KEY)
+            self._model = genai.GenerativeModel(GEMINI_MODEL)
+
+    def is_available(self) -> bool:
+        return DEBUG_MODE or self._model is not None
+
+    def query(self, prompt: str) -> str:
         if DEBUG_MODE:
             return f"Gemini Debug: {prompt[:50]}..."
+        if not self._model:
+            return "Gemini provider unavailable"
 
         try:
-            response = self.gemini_model.generate_content(prompt)
+            response = self._model.generate_content(prompt)
             return response.text
-        except Exception as e:
-            return f"Gemini Error: {str(e)}"
+        except Exception as exc:  # pragma: no cover - network/API failure
+            return f"Gemini Error: {exc}"
 
-    def query_perplexity(self, prompt: str) -> str:
-        """Query Perplexity AI."""
-        if not PERPLEXITY_API_KEY:
-            return "Perplexity API key not configured"
 
+class PerplexityProvider(LLMProvider):
+    """Perplexity-backed provider."""
+
+    name = "perplexity"
+
+    def is_available(self) -> bool:
+        return DEBUG_MODE or bool(PERPLEXITY_API_KEY)
+
+    def query(self, prompt: str) -> str:
         if DEBUG_MODE:
             return f"Perplexity Debug: {prompt[:50]}..."
+        if not PERPLEXITY_API_KEY:
+            return "Perplexity provider unavailable"
 
         try:
-            url = "https://api.perplexity.ai/chat/completions"
-            headers = {
-                "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
-                "Content-Type": "application/json"
-            }
-            data = {
-                "model": "llama-3.1-sonar-large-128k-online",
-                "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 1024,
-                "temperature": 0.7
-            }
-
-            response = requests.post(url, headers=headers, json=data)
+            response = requests.post(
+                "https://api.perplexity.ai/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": PERPLEXITY_MODEL,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 1024,
+                    "temperature": 0.7,
+                },
+                timeout=60,
+            )
             response.raise_for_status()
             result = response.json()
             return result["choices"][0]["message"]["content"]
-        except Exception as e:
-            return f"Perplexity Error: {str(e)}"
+        except Exception as exc:  # pragma: no cover - network/API failure
+            return f"Perplexity Error: {exc}"
 
-    def query_all_llms(self, prompt: str) -> Dict[str, str]:
-        """Query all available LLMs and return their responses."""
+
+ProviderFactory = Callable[[], LLMProvider]
+
+PROVIDER_REGISTRY: dict[str, ProviderFactory] = {
+    "openai": OpenAIProvider,
+    "chatgpt": OpenAIProvider,
+    "gemini": GeminiProvider,
+    "perplexity": PerplexityProvider,
+}
+
+
+class MultiLLMQueryEngine:
+    """Engine for querying a configurable set of LLM providers."""
+
+    def __init__(self, enabled_providers: list[str] | None = None):
+        provider_names = enabled_providers or MULTI_LLM_PROVIDERS
+        self.providers = self._build_providers(provider_names)
+
+    def _build_providers(self, provider_names: list[str]) -> dict[str, LLMProvider]:
+        providers: dict[str, LLMProvider] = {}
+        for provider_name in provider_names:
+            factory = PROVIDER_REGISTRY.get(provider_name)
+            if not factory:
+                continue
+
+            provider = factory()
+            providers[provider.name] = provider
+
+        return providers
+
+    def available_provider_names(self) -> list[str]:
+        """Return configured providers that are ready to run."""
+        return [
+            name
+            for name, provider in self.providers.items()
+            if provider.is_available()
+        ]
+
+    def query_all_llms(self, prompt: str) -> dict[str, str]:
+        """Query all configured and available providers."""
         responses = {}
-
-        if self.openai_client or DEBUG_MODE:
-            responses["chatgpt"] = self.query_chatgpt(prompt)
-
-        if self.gemini_model or DEBUG_MODE:
-            responses["gemini"] = self.query_gemini(prompt)
-
-        if PERPLEXITY_API_KEY or DEBUG_MODE:
-            responses["perplexity"] = self.query_perplexity(prompt)
+        for name, provider in self.providers.items():
+            if provider.is_available():
+                responses[name] = provider.query(prompt)
 
         return responses
 
-    def query_product_recommendations(self, product: Product) -> Dict[str, Dict[str, str]]:
-        """Query all LLMs for recommendations based on product queries."""
+    def query_product_recommendations(self, product: Product) -> dict[str, dict[str, str]]:
+        """Query all configured providers for recommendations based on product queries."""
         from core.query_engine import build_queries  # Import here to avoid circular import
 
         queries = build_queries(product)
-        all_responses = {}
-
-        for query in queries:
-            all_responses[query] = self.query_all_llms(query)
-
-        return all_responses
+        return {query: self.query_all_llms(query) for query in queries}
 
 
 def main():
     """Command-line interface for testing the multi-LLM query engine."""
     import sys
-    import argparse
 
     parser = argparse.ArgumentParser(description="Query multiple LLMs for product recommendations")
     parser.add_argument("query", nargs="?", help="Direct query to send to LLMs")
+    parser.add_argument("--providers", help="Comma-separated provider list")
     parser.add_argument("--product", help="Product name")
     parser.add_argument("--brand", help="Product brand")
     parser.add_argument("--category", help="Product category")
@@ -134,16 +208,16 @@ def main():
     parser.add_argument("--availability", choices=["in stock", "out of stock"], default="in stock")
 
     args = parser.parse_args()
+    enabled_providers = None
+    if args.providers:
+        enabled_providers = [provider.strip().lower() for provider in args.providers.split(",") if provider.strip()]
 
-    engine = MultiLLMQueryEngine()
+    engine = MultiLLMQueryEngine(enabled_providers=enabled_providers)
 
     if args.query:
-        # Direct query
         responses = engine.query_all_llms(args.query)
         print(json.dumps(responses, indent=2))
     elif args.product and args.brand and args.category and args.price is not None:
-        # Product-based queries
-        from core.product_schema import Product
         product = Product(
             name=args.product,
             brand=args.brand,
@@ -151,7 +225,7 @@ def main():
             price=args.price,
             key_features=args.features.split(",") if args.features else [],
             description=args.description or "",
-            availability=args.availability
+            availability=args.availability,
         )
         responses = engine.query_product_recommendations(product)
         print(json.dumps(responses, indent=2))

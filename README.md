@@ -129,13 +129,19 @@ def run_all_queries(product: Product) -> dict:
 
 ### Multi-LLM Query Engine (`core/multi_llm_query.py`)
 
-For enhanced analysis, query multiple LLMs instead of just Claude. This allows Claude to orchestrate queries to OpenAI ChatGPT, Google Gemini, and Perplexity.
+For enhanced analysis, query multiple LLMs instead of just Claude. The provider layer is pluggable, so you can enable only the backends you want and add more later without changing the engine.
 
 **Setup:** Add API keys to `.env`:
 ```
+MULTI_LLM_PROVIDERS=openai,gemini,perplexity
 OPENAI_API_KEY=your_openai_key
 GOOGLE_API_KEY=your_google_key
 PERPLEXITY_API_KEY=your_perplexity_key
+```
+
+You can also restrict the enabled providers, for example:
+```env
+MULTI_LLM_PROVIDERS=openai,perplexity
 ```
 
 **Usage:**
@@ -144,17 +150,20 @@ from core.multi_llm_query import MultiLLMQueryEngine
 
 engine = MultiLLMQueryEngine()
 responses = engine.query_all_llms("What are the best gaming keyboards under $100?")
-# Returns: {"chatgpt": "...", "gemini": "...", "perplexity": "..."}
+# Returns: {"openai": "...", "gemini": "...", "perplexity": "..."}
 
 # Or for product recommendations:
 results = engine.query_product_recommendations(product)
-# Returns nested dict: {query: {"chatgpt": "...", "gemini": "...", "perplexity": "..."}}
+# Returns nested dict: {query: {"openai": "...", "gemini": "...", "perplexity": "..."}}
 ```
 
 **Command Line:**
 ```bash
 # Direct query
 python core/multi_llm_query.py "What are the best gaming keyboards?"
+
+# Direct query with only selected providers
+python core/multi_llm_query.py --providers openai,perplexity "What are the best gaming keyboards?"
 
 # Product-based queries
 python core/multi_llm_query.py --product "MechPro K75" --brand "MechPro" --category "gaming keyboard" --price 89.99 --features "mechanical switches,RGB backlight" --description "Tenkeyless mechanical keyboard"
