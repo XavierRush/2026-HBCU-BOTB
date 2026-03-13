@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import anthropic
-
 from config import (
     ANTHROPIC_API_KEY,
     DEBUG_MODE,
@@ -61,6 +59,8 @@ def build_queries(product: Product) -> list[str]:
 
 def query_llm(prompt: str) -> str:
     """Send a single query to Claude and return the text response."""
+    import anthropic
+
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     message = client.messages.create(
         model=MODEL_NAME,
