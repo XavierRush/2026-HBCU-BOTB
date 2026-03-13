@@ -18,19 +18,20 @@ if DEBUG_MODE:
 
 with st.sidebar:
     st.header("Enter Your Product")
-    name = st.text_input("Product Name", "MechPro K75 Keyboard")
-    brand = st.text_input("Brand", "MechPro")
-    category = st.text_input("Category", "gaming keyboard")
-    price = st.number_input("Price ($)", value=89.99)
+    name = st.text_input("Product Name", "Collapsible Dog Crate")
+    brand = st.text_input("Brand", "Rock Creek Crates")
+    category = st.text_input("Category", "collapsible dog crate")
+    price = st.number_input("Price ($)", value=650.00)
     features_raw = st.text_area(
         "Key Features (one per line)",
-        "mechanical switches\nRGB backlight\nTKL layout\nUSB-C",
+        "collapsible design\npowder-coated aluminum\n10-year warranty\nships fully assembled\nfree shipping",
     )
     description = st.text_area(
         "Product Description",
-        "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, "
-        "per-key RGB lighting, and a detachable USB-C cable. Built for gamers who want a "
-        "compact, fast, and reliable typing experience.",
+        "Rock Creek Crates' Collapsible Dog Crate is a powder-coated aluminum kennel built "
+        "to stow away in minutes while still giving dogs a durable, den-like space. It ships "
+        "fully assembled, includes a 10-year warranty, and is designed for everyday travel "
+        "and home use.",
     )
     availability = st.selectbox("Availability", ["in stock", "out of stock"])
     run = st.button("Analyze Visibility", type="primary")

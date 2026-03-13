@@ -1,20 +1,66 @@
 [
   {
-    "name": "MechPro K75 Keyboard",
-    "category": "gaming keyboard",
-    "brand": "MechPro",
-    "price": 89.99,
-    "key_features": ["mechanical switches", "RGB backlight", "TKL layout", "USB-C"],
-    "description": "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable.",
-    "availability": "in stock"
+    "name": "Collapsible Dog Crate",
+    "category": "collapsible dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 650.0,
+    "key_features": [
+      "collapsible design",
+      "powder-coated aluminum",
+      "10-year warranty",
+      "ships fully assembled",
+      "free shipping"
+    ],
+    "description": "Rock Creek Crates' Collapsible Dog Crate is a powder-coated aluminum kennel that folds down for storage, ships fully assembled, and is backed by a 10-year warranty.",
+    "availability": "in stock",
+    "url": "https://rockcreekcrates.com/products/collapsible-dog-crate"
   },
   {
-    "name": "ClearView UV Protection Window Tint Kit",
-    "category": "car window tint",
-    "brand": "ClearView",
-    "price": 34.99,
-    "key_features": ["UV protection", "DIY install", "bubble-free film", "legal tint levels"],
-    "description": "ClearView's window tint kit offers 35% VLT UV-blocking film for a clean, professional finish. Pre-cut for most sedan models.",
-    "availability": "in stock"
+    "name": "Separation Anxiety Dog Crate",
+    "category": "high-anxiety dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 884.0,
+    "key_features": [
+      "best for anxious dogs",
+      "10-year warranty",
+      "ships fully assembled",
+      "free shipping",
+      "stationary crate design"
+    ],
+    "description": "Rock Creek Crates' Separation Anxiety Dog Crate is a stationary aluminum crate marketed for anxious dogs. It ships fully assembled, includes free shipping, and carries a 10-year warranty.",
+    "availability": "out of stock",
+    "url": "https://rockcreekcrates.com/products/separation-anxiety-dog-crate"
+  },
+  {
+    "name": "Stationary Dog Crate",
+    "category": "aluminum dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 934.0,
+    "key_features": [
+      "crash tested",
+      "airline-approved",
+      "10-year warranty",
+      "ships fully assembled",
+      "optional side door"
+    ],
+    "description": "Rock Creek Crates' Stationary Dog Crate is an aluminum dog crate designed for durability, shipping fully assembled with a 10-year warranty. The product page highlights crash-tested protection, airline approval, and an optional side door configuration.",
+    "availability": "in stock",
+    "url": "https://rockcreekcrates.com/products/aluminum-dog-crate-new-design-with-optional-side-door"
+  },
+  {
+    "name": "G1 Kennel Black",
+    "category": "crash-tested dog kennel",
+    "brand": "GUNNER",
+    "price": 550.0,
+    "key_features": [
+      "5 Star Crash Tested",
+      "double-walled kennel",
+      "2x impact protection",
+      "made in America",
+      "lifetime warranty"
+    ],
+    "description": "The GUNNER G1 Kennel Black is a crash-tested travel kennel with a double-walled construction, thermal protection, American manufacturing, and a lifetime warranty.",
+    "availability": "in stock",
+    "url": "https://gunner.com/collections/kennels/products/g1-kennel-black"
   }
 ]

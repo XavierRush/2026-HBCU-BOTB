@@ -9,7 +9,7 @@
 This prototype helps small/medium businesses understand why their products are invisible or misrepresented in AI-generated search results. It:
 
 1. Accepts a product (name, description, key specs, price) as input
-2. Queries multiple LLMs with generalized consumer-style prompts (e.g. "What are the best gaming keyboards under $100?")
+2. Queries multiple LLMs with generalized consumer-style prompts (e.g. "What are the best collapsible dog crates under $700?")
 3. Compares LLM responses against the actual product data using NLP
 4. Scores visibility (did the product appear?) and accuracy (is the data correct?)
 5. Outputs a dashboard with gap analysis, recommendations, and a visibility score
@@ -68,7 +68,7 @@ from typing import Optional, List
 
 class Product(BaseModel):
     name: str
-    category: str                  # e.g. "gaming keyboard"
+    category: str                  # e.g. "collapsible dog crate"
     brand: str
     price: float
     key_features: List[str]        # e.g. ["mechanical switches", "RGB", "TKL layout"]
@@ -143,7 +143,7 @@ PERPLEXITY_API_KEY=your_perplexity_key
 from core.multi_llm_query import MultiLLMQueryEngine
 
 engine = MultiLLMQueryEngine()
-responses = engine.query_all_llms("What are the best gaming keyboards under $100?")
+responses = engine.query_all_llms("What are the best crash-tested dog crates under $1000?")
 # Returns: {"chatgpt": "...", "gemini": "...", "perplexity": "..."}
 
 # Or for product recommendations:
@@ -154,10 +154,10 @@ results = engine.query_product_recommendations(product)
 **Command Line:**
 ```bash
 # Direct query
-python core/multi_llm_query.py "What are the best gaming keyboards?"
+python core/multi_llm_query.py "What are the best collapsible dog crates under $700?"
 
 # Product-based queries
-python core/multi_llm_query.py --product "MechPro K75" --brand "MechPro" --category "gaming keyboard" --price 89.99 --features "mechanical switches,RGB backlight" --description "Tenkeyless mechanical keyboard"
+python core/multi_llm_query.py --product "Collapsible Dog Crate" --brand "Rock Creek Crates" --category "collapsible dog crate" --price 650 --features "collapsible design,powder-coated aluminum,10-year warranty,ships fully assembled" --description "Powder-coated aluminum dog crate that folds down for storage and travel."
 ```
 
 ### Step 3 — NLP Analyzer (`core/nlp_analyzer.py`)
@@ -306,12 +306,12 @@ st.caption("Understand why your product isn't showing up in AI-assisted shopping
 # --- Sidebar: Product Input ---
 with st.sidebar:
     st.header("Enter Your Product")
-    name = st.text_input("Product Name", "MechPro K75 Keyboard")
-    brand = st.text_input("Brand", "MechPro")
-    category = st.text_input("Category", "gaming keyboard")
-    price = st.number_input("Price ($)", value=89.99)
-    features_raw = st.text_area("Key Features (one per line)", "mechanical switches\nRGB backlight\nTKL layout\nUSB-C")
-    description = st.text_area("Product Description", "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable. Built for gamers who want a compact, fast, and reliable typing experience.")
+    name = st.text_input("Product Name", "Collapsible Dog Crate")
+    brand = st.text_input("Brand", "Rock Creek Crates")
+    category = st.text_input("Category", "collapsible dog crate")
+    price = st.number_input("Price ($)", value=650.00)
+    features_raw = st.text_area("Key Features (one per line)", "collapsible design\npowder-coated aluminum\n10-year warranty\nships fully assembled\nfree shipping")
+    description = st.text_area("Product Description", "Rock Creek Crates' Collapsible Dog Crate is a powder-coated aluminum kennel built to stow away in minutes while still giving dogs a durable, den-like space. It ships fully assembled, includes a 10-year warranty, and is designed for everyday travel and home use.")
     availability = st.selectbox("Availability", ["in stock", "out of stock"])
     run = st.button("Analyze Visibility", type="primary")
 
@@ -385,25 +385,53 @@ if run:
 ```json
 [
   {
-    "name": "MechPro K75 Keyboard",
-    "category": "gaming keyboard",
-    "brand": "MechPro",
-    "price": 89.99,
-    "key_features": ["mechanical switches", "RGB backlight", "TKL layout", "USB-C"],
-    "description": "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable.",
-    "availability": "in stock"
+    "name": "Collapsible Dog Crate",
+    "category": "collapsible dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 650.0,
+    "key_features": ["collapsible design", "powder-coated aluminum", "10-year warranty", "ships fully assembled", "free shipping"],
+    "description": "Rock Creek Crates' Collapsible Dog Crate is a powder-coated aluminum kennel that folds down for storage, ships fully assembled, and is backed by a 10-year warranty.",
+    "availability": "in stock",
+    "url": "https://rockcreekcrates.com/products/collapsible-dog-crate"
   },
   {
-    "name": "ClearView UV Protection Window Tint Kit",
-    "category": "car window tint",
-    "brand": "ClearView",
-    "price": 34.99,
-    "key_features": ["UV protection", "DIY install", "bubble-free film", "legal tint levels"],
-    "description": "ClearView's window tint kit offers 35% VLT UV-blocking film for a clean, professional finish. Pre-cut for most sedan models.",
-    "availability": "in stock"
+    "name": "Separation Anxiety Dog Crate",
+    "category": "high-anxiety dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 884.0,
+    "key_features": ["best for anxious dogs", "10-year warranty", "ships fully assembled", "free shipping", "stationary crate design"],
+    "description": "Rock Creek Crates' Separation Anxiety Dog Crate is a stationary aluminum crate marketed for anxious dogs. It ships fully assembled, includes free shipping, and carries a 10-year warranty.",
+    "availability": "out of stock",
+    "url": "https://rockcreekcrates.com/products/separation-anxiety-dog-crate"
+  },
+  {
+    "name": "Stationary Dog Crate",
+    "category": "aluminum dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 934.0,
+    "key_features": ["crash tested", "airline-approved", "10-year warranty", "ships fully assembled", "optional side door"],
+    "description": "Rock Creek Crates' Stationary Dog Crate is an aluminum dog crate designed for durability, shipping fully assembled with a 10-year warranty. The product page highlights crash-tested protection, airline approval, and an optional side door configuration.",
+    "availability": "in stock",
+    "url": "https://rockcreekcrates.com/products/aluminum-dog-crate-new-design-with-optional-side-door"
+  },
+  {
+    "name": "G1 Kennel Black",
+    "category": "crash-tested dog kennel",
+    "brand": "GUNNER",
+    "price": 550.0,
+    "key_features": ["5 Star Crash Tested", "double-walled kennel", "2x impact protection", "made in America", "lifetime warranty"],
+    "description": "The GUNNER G1 Kennel Black is a crash-tested travel kennel with a double-walled construction, thermal protection, American manufacturing, and a lifetime warranty.",
+    "availability": "in stock",
+    "url": "https://gunner.com/collections/kennels/products/g1-kennel-black"
   }
 ]
 ```
+
+### Product Set for Final Prototype
+
+- Default demo product: Rock Creek Crates `Collapsible Dog Crate` at `https://rockcreekcrates.com/products/collapsible-dog-crate`
+- Additional Rock Creek products: `Separation Anxiety Dog Crate` and `Stationary Dog Crate`
+- Competitor benchmark: GUNNER `G1 Kennel Black`, with the broader kennel collection at `https://gunner.com/collections/kennels`
 
 ### Step 7 — Requirements (`requirements.txt`)
 
@@ -494,7 +522,7 @@ VS Code users can also use the `Streamlit Debug Mode` or `Streamlit Live Claude`
 ## Demo Flow (for judges)
 
 1. Launch the app with `./run.sh`
-2. In the sidebar, the sample product (MechPro K75) is pre-filled
+2. In the sidebar, the default Rock Creek Crates product (`Collapsible Dog Crate`) is pre-filled
 3. Click **Analyze Visibility**
 4. Dashboard shows:
    - Visibility Rate (% of AI queries that mentioned the product)

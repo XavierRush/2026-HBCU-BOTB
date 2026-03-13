@@ -2,7 +2,15 @@ from __future__ import annotations
 
 import anthropic
 
-from config import ANTHROPIC_API_KEY, DEBUG_MODE, MODEL_NAME, QUERY_TEMPLATES
+from config import (
+    ANTHROPIC_API_KEY,
+    DEBUG_MODE,
+    MODEL_NAME,
+    QUERY_TEMPLATES,
+    WEB_SEARCH_ALLOWED_CALLERS,
+    WEB_SEARCH_TOOL_NAME,
+    WEB_SEARCH_TOOL_TYPE,
+)
 from core.debug_mode import mock_query_response
 from core.product_schema import Product
 
@@ -33,8 +41,20 @@ def query_llm(prompt: str) -> str:
         model=MODEL_NAME,
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],
+        tools=[
+            {
+                "type": WEB_SEARCH_TOOL_TYPE,
+                "name": WEB_SEARCH_TOOL_NAME,
+                "allowed_callers": WEB_SEARCH_ALLOWED_CALLERS,
+            }
+        ],
     )
-    return message.content[0].text
+    text_blocks = [
+        block.text
+        for block in message.content
+        if getattr(block, "type", None) == "text" and getattr(block, "text", "")
+    ]
+    return "\n".join(text_blocks).strip()
 
 
 def run_all_queries(product: Product) -> dict[str, str]:
