@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import anthropic
+
 from config import (
     ANTHROPIC_API_KEY,
     DEBUG_MODE,
@@ -9,6 +11,7 @@ from config import (
     WEB_SEARCH_TOOL_NAME,
     WEB_SEARCH_TOOL_TYPE,
 )
+from core.anthropic_rate_limit import create_rate_limited_message
 from core.debug_mode import mock_query_response
 from core.product_schema import Product
 
@@ -59,10 +62,9 @@ def build_queries(product: Product) -> list[str]:
 
 def query_llm(prompt: str) -> str:
     """Send a single query to Claude and return the text response."""
-    import anthropic
-
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    message = client.messages.create(
+    message = create_rate_limited_message(
+        client,
         model=MODEL_NAME,
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],

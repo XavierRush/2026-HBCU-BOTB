@@ -17,6 +17,9 @@ load_dotenv(ENV_FILE, override=False)
 DEBUG_MODE = os.getenv("DEBUG_MODE", "0").lower() in {"1", "true", "yes", "on"}
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 MODEL_NAME = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-20250514")
+ANTHROPIC_INPUT_TOKENS_PER_MINUTE = int(
+    os.getenv("ANTHROPIC_INPUT_TOKENS_PER_MINUTE", "30000")
+)
 WEB_SEARCH_TOOL_TYPE = os.getenv("ANTHROPIC_WEB_SEARCH_TOOL_TYPE", "web_search_20260209")
 WEB_SEARCH_TOOL_NAME = os.getenv("ANTHROPIC_WEB_SEARCH_TOOL_NAME", "web_search")
 WEB_SEARCH_ALLOWED_CALLERS = [

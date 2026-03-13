@@ -3,6 +3,7 @@ from __future__ import annotations
 import anthropic
 
 from config import ANTHROPIC_API_KEY, DEBUG_MODE, MODEL_NAME
+from core.anthropic_rate_limit import create_rate_limited_message
 from core.debug_mode import mock_recommendations
 from core.product_schema import Product
 
@@ -38,10 +39,11 @@ Please provide:
 4. A plain-language explanation of why this product is not showing up in AI results
 
 Be specific and actionable. Format as numbered lists under clear headers.
-""".strip()
+    """.strip()
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    message = client.messages.create(
+    message = create_rate_limited_message(
+        client,
         model=MODEL_NAME,
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],
