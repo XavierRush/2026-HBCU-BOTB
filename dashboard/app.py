@@ -19,23 +19,49 @@ def inject_styles() -> None:
         """
         <style>
         :root {
-            --app-text: #1f1a15;
-            --app-muted: #5f554b;
-            --app-surface: rgba(255, 255, 255, 0.82);
-            --app-border: rgba(22, 22, 22, 0.12);
-            --dark-ui-text: #dcecff;
+            --bg-1: #060918;
+            --bg-2: #081026;
+            --surface: rgba(26, 35, 54, 0.65);
+            --surface-strong: rgba(24, 32, 51, 0.88);
+            --border: rgba(88, 168, 242, 0.22);
+            --text: rgba(230, 239, 255, 0.92);
+            --muted: rgba(197, 210, 232, 0.55);
+            --accent: #18d0ff;
+            --accent2: #78ffa3;
+            --warn: #ff9f40;
+            --danger: #ff4d6d;
+            --shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
         }
+
+        html, body, .stApp {
+            height: 100%;
+        }
+
         .stApp {
-            background:
-                radial-gradient(circle at top left, rgba(233, 183, 123, 0.22), transparent 30%),
-                linear-gradient(180deg, #fff8ef 0%, #f7efe4 100%);
-            color: var(--app-text);
+            background: radial-gradient(circle at top left, rgba(5, 134, 255, 0.18), transparent 45%),
+                        radial-gradient(circle at bottom right, rgba(152, 255, 181, 0.12), transparent 50%),
+                        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+            color: var(--text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
+
+        .stApp::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 40px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .block-container {
-            padding-top: 2rem;
+            padding-top: 2.5rem;
             padding-bottom: 2.5rem;
-            max-width: 1440px;
+            max-width: 1400px;
         }
+
         .stApp,
         .stApp p,
         .stApp label,
@@ -45,34 +71,44 @@ def inject_styles() -> None:
         .stMarkdown,
         .stText,
         .stCaption {
-            color: var(--app-text);
+            color: var(--text);
         }
+
         .stApp a {
-            color: #7b3f12;
+            color: var(--accent);
+            text-decoration: underline 1px rgba(24, 208, 255, 0.6);
         }
+
         [data-testid="stHeader"] {
-            background: linear-gradient(180deg, #161616 0%, #26201a 100%);
+            background: rgba(6, 8, 24, 0.85);
+            border-bottom: 1px solid rgba(88, 168, 242, 0.18);
         }
+
         [data-testid="stHeader"] *,
         [data-testid="stToolbar"] *,
         [data-testid="stDecoration"] * {
-            color: var(--dark-ui-text) !important;
-            fill: var(--dark-ui-text) !important;
+            color: var(--text) !important;
+            fill: var(--text) !important;
         }
+
         [data-testid="stToolbar"] button,
         [data-testid="stHeader"] button,
         [data-testid="stToolbar"] svg,
         [data-testid="stHeader"] svg {
-            color: var(--dark-ui-text) !important;
-            fill: var(--dark-ui-text) !important;
-            stroke: var(--dark-ui-text) !important;
+            color: var(--text) !important;
+            fill: var(--text) !important;
+            stroke: var(--text) !important;
         }
+
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #161616 0%, #26201a 100%);
+            background: rgba(6, 9, 24, 0.92);
+            border-right: 1px solid rgba(88, 168, 242, 0.18);
         }
+
         [data-testid="stSidebar"] * {
-            color: #f8efe3;
+            color: var(--text);
         }
+
         [data-testid="stSidebar"] h1,
         [data-testid="stSidebar"] h2,
         [data-testid="stSidebar"] h3,
@@ -80,21 +116,24 @@ def inject_styles() -> None:
         [data-testid="stSidebar"] h5,
         [data-testid="stSidebar"] h6,
         [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
-            color: var(--dark-ui-text) !important;
+            color: var(--text) !important;
         }
+
         [data-testid="stSidebar"] .stTextInput input,
         [data-testid="stSidebar"] .stTextArea textarea,
         [data-testid="stSidebar"] .stNumberInput input,
         [data-testid="stSidebar"] div[data-baseweb="select"] > div,
         [data-testid="stSidebar"] div[data-baseweb="base-input"] > div {
-            background: rgba(255, 248, 239, 0.12);
-            color: var(--dark-ui-text) !important;
-            border: 1px solid rgba(248, 239, 227, 0.22);
+            background: rgba(18, 24, 44, 0.76);
+            color: var(--text) !important;
+            border: 1px solid rgba(88, 168, 242, 0.22);
         }
+
         [data-testid="stSidebar"] input::placeholder,
         [data-testid="stSidebar"] textarea::placeholder {
-            color: rgba(220, 236, 255, 0.72) !important;
+            color: rgba(230, 239, 255, 0.5) !important;
         }
+
         [data-testid="stSidebar"] label,
         [data-testid="stSidebar"] .stMarkdown,
         [data-testid="stSidebar"] .stSelectbox div,
@@ -102,20 +141,22 @@ def inject_styles() -> None:
         [data-testid="stSidebar"] [data-baseweb="select"] input,
         [data-testid="stSidebar"] button,
         [data-testid="stSidebar"] svg {
-            color: var(--dark-ui-text) !important;
-            fill: var(--dark-ui-text) !important;
-            stroke: var(--dark-ui-text) !important;
+            color: var(--text) !important;
+            fill: var(--text) !important;
+            stroke: var(--text) !important;
         }
+
         .hero-card,
         .metric-card,
         .section-card,
         .query-card {
-            border: 1px solid rgba(22, 22, 22, 0.08);
+            border: 1px solid var(--border);
             border-radius: 22px;
-            background: var(--app-surface);
-            box-shadow: 0 20px 40px rgba(54, 40, 22, 0.08);
-            backdrop-filter: blur(10px);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
         }
+
         [data-testid="stExpander"],
         [data-testid="stAlert"],
         [data-testid="stDownloadButton"] > button,
@@ -126,16 +167,18 @@ def inject_styles() -> None:
         .stSelectbox select,
         div[data-baseweb="select"] > div,
         div[data-baseweb="base-input"] > div {
-            color: var(--app-text);
+            color: var(--text);
         }
+
         .stTextInput input,
         .stTextArea textarea,
         .stNumberInput input,
         div[data-baseweb="select"] > div,
         div[data-baseweb="base-input"] > div {
-            background: rgba(255, 252, 247, 0.96);
-            border: 1px solid var(--app-border);
+            background: rgba(12, 17, 33, 0.9);
+            border: 1px solid rgba(88, 168, 242, 0.22);
         }
+
         .stTextInput label,
         .stTextArea label,
         .stNumberInput label,
@@ -143,105 +186,128 @@ def inject_styles() -> None:
         .stDownloadButton,
         .stCheckbox label,
         .stRadio label {
-            color: var(--app-text) !important;
+            color: var(--text) !important;
             font-weight: 600;
         }
+
         .stButton > button,
         .stDownloadButton > button {
-            background: #8f5b2e;
-            color: #fff8ef;
-            border: 1px solid #7c4f28;
+            background: linear-gradient(90deg, rgba(24,208,255,0.95), rgba(120,255,163,0.85));
+            color: rgba(6, 8, 24, 0.95);
+            border: 1px solid rgba(24, 208, 255, 0.4);
         }
+
         .stButton > button:hover,
         .stDownloadButton > button:hover {
-            background: #7c4f28;
-            color: #fff8ef;
+            background: linear-gradient(90deg, rgba(24,208,255,1), rgba(120,255,163,0.95));
         }
+
         [data-testid="stExpander"] summary,
         [data-testid="stExpander"] summary * {
-            color: var(--app-text) !important;
+            color: var(--text) !important;
         }
+
         [data-testid="stAlert"] * {
             color: inherit;
         }
+
         .hero-card {
-            padding: 1.5rem 1.6rem;
-            margin-bottom: 1rem;
+            padding: 1.7rem 1.6rem;
+            margin-bottom: 1.4rem;
+            border-radius: 28px;
         }
+
         .hero-eyebrow {
             text-transform: uppercase;
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
             font-size: 0.72rem;
-            color: #8f5b2e;
+            color: rgba(24, 208, 255, 0.85);
             font-weight: 700;
         }
+
         .hero-title {
-            font-size: 2.2rem;
+            font-size: 2.9rem;
             line-height: 1.05;
             margin: 0.35rem 0 0.45rem;
-            color: #1d160f;
-            font-weight: 700;
+            color: rgba(240, 250, 255, 0.96);
+            font-weight: 800;
         }
+
         .hero-copy {
-            color: #5f554b;
-            max-width: 48rem;
-            font-size: 1rem;
+            color: rgba(197, 210, 232, 0.72);
+            max-width: 52rem;
+            font-size: 1.05rem;
         }
+
         .metric-card {
-            padding: 1rem 1.1rem;
-            min-height: 144px;
+            padding: 1.1rem 1.2rem;
+            min-height: 160px;
+            border-radius: 22px;
         }
+
         .metric-label {
-            color: #7b6b5d;
+            color: rgba(197, 210, 232, 0.55);
             font-size: 0.82rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.09em;
             font-weight: 700;
         }
+
         .metric-value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             line-height: 1;
-            font-weight: 700;
-            color: #161616;
+            font-weight: 800;
+            color: rgba(240, 250, 255, 0.96);
             margin: 0.4rem 0 0.55rem;
         }
+
         .metric-note {
-            color: #5f554b;
+            color: rgba(197, 210, 232, 0.65);
             font-size: 0.95rem;
         }
+
         .section-card {
-            padding: 1.1rem 1.2rem;
-            margin-top: 1rem;
+            padding: 1.2rem 1.3rem;
+            margin-top: 1.1rem;
+            border-radius: 24px;
         }
+
         .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #161616;
-            margin-bottom: 0.25rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: rgba(240, 250, 255, 0.96);
+            margin-bottom: 0.35rem;
         }
+
         .section-copy {
-            color: #675a4d;
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
+            color: rgba(197, 210, 232, 0.68);
+            font-size: 0.98rem;
+            margin-bottom: 0.8rem;
         }
+
         .pill-row {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-top: 0.6rem;
         }
+
         .pill {
-            background: #f5ebdf;
-            color: #6e5335;
+            background: rgba(24, 208, 255, 0.12);
+            color: rgba(24, 208, 255, 0.92);
+            border: 1px solid rgba(24, 208, 255, 0.25);
             border-radius: 999px;
             padding: 0.32rem 0.72rem;
             font-size: 0.82rem;
-            font-weight: 600;
+            font-weight: 700;
         }
+
         .query-card {
-            padding: 0.9rem 1rem;
-            margin-bottom: 0.85rem;
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.9rem;
+            border-radius: 20px;
         }
+
         .query-topline {
             display: flex;
             justify-content: space-between;
@@ -249,37 +315,45 @@ def inject_styles() -> None:
             align-items: center;
             margin-bottom: 0.5rem;
         }
+
         .query-title {
             font-weight: 700;
-            color: #1e1a16;
-            font-size: 1rem;
+            color: rgba(240, 250, 255, 0.96);
+            font-size: 1.02rem;
         }
+
         .query-badge {
             border-radius: 999px;
-            padding: 0.26rem 0.7rem;
+            padding: 0.3rem 0.75rem;
             font-size: 0.8rem;
             font-weight: 700;
             white-space: nowrap;
+            letter-spacing: 0.04em;
         }
+
         .query-badge.good {
-            background: rgba(40, 138, 84, 0.14);
-            color: #1f6c42;
+            background: rgba(120, 255, 163, 0.14);
+            color: rgba(120, 255, 163, 0.95);
         }
+
         .query-badge.warn {
-            background: rgba(194, 111, 34, 0.16);
-            color: #9a5418;
+            background: rgba(255, 159, 64, 0.18);
+            color: rgba(255, 159, 64, 0.92);
         }
+
         .query-meta {
-            color: #6a5c4d;
+            color: rgba(197, 210, 232, 0.6);
             font-size: 0.92rem;
         }
+
         .stExpander {
-            border: 1px solid rgba(22, 22, 22, 0.08);
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(88, 168, 242, 0.18);
+            border-radius: 20px;
+            background: rgba(12, 17, 33, 0.82);
         }
+
         code {
-            color: #5d2f0c;
+            color: rgba(24, 208, 255, 0.92);
         }
         </style>
         """,
