@@ -33,5 +33,5 @@ else {
     Write-Host "Using Claude API with provided key."
 }
 
-Write-Host "Starting AI Visibility Analyzer..."
+Write-Host "Starting AISLED..."
 python -m streamlit run dashboard/app.py --server.port 8501

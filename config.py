@@ -1,4 +1,4 @@
-"""Central configuration for the AI Visibility Analyzer prototype."""
+"""Central configuration for the AISLED prototype."""
 
 from __future__ import annotations
 

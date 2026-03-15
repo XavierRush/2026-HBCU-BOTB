@@ -1,4 +1,4 @@
-# AI Visibility Analyzer — Prototype Specification
+# AISLED — Prototype Specification
 **Project:** HBCU Battle of the Brains 2026 — "The New Front Door: Trustworthy AI Product Discovery"  
 **Purpose:** This document is a prompt/spec for an AI coding agent to build a working prototype.
 
@@ -265,19 +265,25 @@ from core.query_engine import run_all_queries
 from core.nlp_analyzer import aggregate_results
 from core.recommender import generate_recommendations
 
-st.set_page_config(page_title="AI Visibility Analyzer", layout="wide")
-st.title("🔍 AI Visibility Analyzer")
+st.set_page_config(page_title="AISLED", layout="wide")
+st.title("🔍 AISLED")
 st.caption("Understand why your product isn't showing up in AI-assisted shopping results.")
 
 # --- Sidebar: Product Input ---
 with st.sidebar:
     st.header("Enter Your Product")
-    name = st.text_input("Product Name", "MechPro K75 Keyboard")
-    brand = st.text_input("Brand", "MechPro")
-    category = st.text_input("Category", "gaming keyboard")
-    price = st.number_input("Price ($)", value=89.99)
-    features_raw = st.text_area("Key Features (one per line)", "mechanical switches\nRGB backlight\nTKL layout\nUSB-C")
-    description = st.text_area("Product Description", "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable. Built for gamers who want a compact, fast, and reliable typing experience.")
+    name = st.text_input("Product Name", "Collapsible Dog Crate")
+    brand = st.text_input("Brand", "Rock Creek Crates")
+    category = st.text_input("Category", "dog crate")
+    price = st.number_input("Price ($)", value=650.00)
+    features_raw = st.text_area(
+        "Key Features (one per line)",
+        "Comes with 10 year warranty\nEasy to Carry Handles\nStackable Corner Guards\nUltra-Tough Overbuilt Door\n6 Durable Textured Colors\nSecondary Butterfly Latches\nUpgraded Lockable Paddle Latch\nSide Panel Screws for Added Structural Support\nOptimal Hexagon Ventilation",
+    )
+    description = st.text_area(
+        "Product Description",
+        "Rock Creek Crates’ collapsible dog crate is built for pet lovers who want a rugged yet portable home for their pup. It includes a 10-year warranty, multiple locking points, and ventilation designed to keep dogs comfortable. (293 reviews)",
+    )
     availability = st.selectbox("Availability", ["in stock", "out of stock"])
     run = st.button("Analyze Visibility", type="primary")
 
@@ -394,7 +400,7 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
   export DEBUG_MODE=1
 fi
 
-echo "Starting AI Visibility Analyzer..."
+echo "Starting AISLED..."
 streamlit run dashboard/app.py --server.port 8501
 
 echo "App running at http://localhost:8501"

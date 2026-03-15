@@ -47,7 +47,7 @@ def query_llm(prompt: str) -> str:
 
 def run_all_queries(product: Product) -> dict[str, str]:
     """Return a mapping of prompt to LLM response."""
-    if DEBUG_MODE or not ANTHROPIC_API_KEY:
+    if DEBUG_MODE or not ANTHROPIC_API_KEY or anthropic is None:
         return {
             query: mock_query_response(product, query)
             for query in build_queries(product)

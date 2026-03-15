@@ -23,5 +23,5 @@ else
   echo "Using Claude API with provided key."
 fi
 
-echo "Starting AI Visibility Analyzer..."
+echo "Starting AISLED..."
 streamlit run dashboard/app.py --server.port 8501

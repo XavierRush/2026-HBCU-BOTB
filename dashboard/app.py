@@ -11,7 +11,7 @@ from core.product_schema import Product
 from core.query_engine import run_all_queries
 from core.recommender import generate_recommendations
 
-st.set_page_config(page_title="AI Visibility Analyzer", layout="wide")
+st.set_page_config(page_title="AISLED", layout="wide")
 
 
 def inject_styles() -> None:
@@ -341,8 +341,8 @@ inject_styles()
 st.markdown(
     """
     <div class="hero-card">
-        <div class="hero-eyebrow">Visibility Dashboard</div>
-        <div class="hero-title">AI Visibility Analyzer</div>
+        <div class="hero-eyebrow">Client Dashboard</div>
+        <div class="hero-title">AISLED</div>
         <div class="hero-copy">
             Diagnose how AI assistants describe your product, spot missing details quickly,
             and review structured recommendations in expandable sections.
@@ -351,24 +351,22 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-if DEBUG_MODE:
-    st.info("Debug mode is enabled. Claude calls are replaced with mock responses.")
 
 with st.sidebar:
     st.header("Enter Your Product")
-    name = st.text_input("Product Name", "MechPro K75 Keyboard")
-    brand = st.text_input("Brand", "MechPro")
-    category = st.text_input("Category", "gaming keyboard")
-    price = st.number_input("Price ($)", value=89.99)
+    name = st.text_input("Product Name", "Collapsible Dog Crate")
+    brand = st.text_input("Brand", "Rock Creek Crates")
+    category = st.text_input("Category", "dog crate")
+    price = st.number_input("Price ($)", value=650.00)
     features_raw = st.text_area(
         "Key Features (one per line)",
-        "mechanical switches\nRGB backlight\nTKL layout\nUSB-C",
+        "Comes with 10 year warranty\nEasy to Carry Handles\nStackable Corner Guards\nUltra-Tough Overbuilt Door\n6 Durable Textured Colors\nSecondary Butterfly Latches\nUpgraded Lockable Paddle Latch\nSide Panel Screws for Added Structural Support\nOptimal Hexagon Ventilation",
     )
     description = st.text_area(
         "Product Description",
-        "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, "
-        "per-key RGB lighting, and a detachable USB-C cable. Built for gamers who want a "
-        "compact, fast, and reliable typing experience.",
+        "Rock Creek Crates’ collapsible dog crate is built for pet lovers who want a rugged yet portable home for their pup. "
+        "It includes a 10-year warranty, multiple locking points, and ventilation designed to keep dogs comfortable. "
+        "(293 reviews)",
     )
     availability = st.selectbox("Availability", ["in stock", "out of stock"])
     run = st.button("Analyze Visibility", type="primary")

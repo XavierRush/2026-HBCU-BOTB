@@ -1,10 +1,10 @@
-# AI Visibility Analyzer - Development Roadmap
+# AISLED - Development Roadmap
 
 **Project:** HBCU Battle of the Brains 2026 — "The New Front Door: Trustworthy AI Product Discovery"
 
 ## Executive Summary
 
-This roadmap outlines the evolution of the AI Visibility Analyzer from a local prototype to a production-ready, secure, and scalable cloud application. The focus areas are **security**, **privacy**, and **tech stack** enhancements, with particular emphasis on data protection, compliance, and cloud-native scalability.
+This roadmap outlines the evolution of AISLED from a local prototype to a production-ready, secure, and scalable cloud application. The focus areas are **security**, **privacy**, and **tech stack** enhancements, with particular emphasis on data protection, compliance, and cloud-native scalability.
 
 ---
 
@@ -320,4 +320,4 @@ Q1 2027: Phase 4 - Advanced Features & Enterprise Readiness
 ├── Week 41-44: Advanced analytics
 ```
 
-This roadmap ensures the AI Visibility Analyzer evolves from a prototype to a secure, privacy-compliant, and highly scalable enterprise application while maintaining the core mission of helping businesses improve their AI product visibility.
+This roadmap ensures AISLED evolves from a prototype to a secure, privacy-compliant, and highly scalable enterprise application while maintaining the core mission of helping businesses improve their AI product visibility.

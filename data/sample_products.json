@@ -1,11 +1,21 @@
 [
   {
-    "name": "MechPro K75 Keyboard",
-    "category": "gaming keyboard",
-    "brand": "MechPro",
-    "price": 89.99,
-    "key_features": ["mechanical switches", "RGB backlight", "TKL layout", "USB-C"],
-    "description": "The MechPro K75 is a tenkeyless mechanical keyboard with Cherry MX Red switches, per-key RGB lighting, and a detachable USB-C cable.",
+    "name": "Collapsible Dog Crate",
+    "category": "dog crate",
+    "brand": "Rock Creek Crates",
+    "price": 650.00,
+    "key_features": [
+      "Comes with 10 year warranty",
+      "Easy to Carry Handles",
+      "Stackable Corner Guards",
+      "Ultra-Tough Overbuilt Door",
+      "6 Durable Textured Colors",
+      "Secondary Butterfly Latches",
+      "Upgraded Lockable Paddle Latch",
+      "Side Panel Screws for Added Structural Support",
+      "Optimal Hexagon Ventilation"
+    ],
+    "description": "Rock Creek Crates' collapsible dog crate is built for pet lovers who want a rugged yet portable home for their pup. It includes a 10-year warranty, multiple locking points, and ventilation designed to keep dogs comfortable. (293 reviews)",
     "availability": "in stock"
   },
   {
@@ -13,7 +23,12 @@
     "category": "car window tint",
     "brand": "ClearView",
     "price": 34.99,
-    "key_features": ["UV protection", "DIY install", "bubble-free film", "legal tint levels"],
+    "key_features": [
+      "UV protection",
+      "DIY install",
+      "bubble-free film",
+      "legal tint levels"
+    ],
     "description": "ClearView's window tint kit offers 35% VLT UV-blocking film for a clean, professional finish. Pre-cut for most sedan models.",
     "availability": "in stock"
   }

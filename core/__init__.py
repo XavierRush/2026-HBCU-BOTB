@@ -1,1 +1,1 @@
-"""Core logic for the AI Visibility Analyzer."""
+"""Core logic for AISLED."""
