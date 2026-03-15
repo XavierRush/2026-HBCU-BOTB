@@ -18,15 +18,54 @@ def inject_styles() -> None:
     st.markdown(
         """
         <style>
+        :root {
+            --app-text: #1f1a15;
+            --app-muted: #5f554b;
+            --app-surface: rgba(255, 255, 255, 0.82);
+            --app-border: rgba(22, 22, 22, 0.12);
+            --dark-ui-text: #dcecff;
+        }
         .stApp {
             background:
                 radial-gradient(circle at top left, rgba(233, 183, 123, 0.22), transparent 30%),
                 linear-gradient(180deg, #fff8ef 0%, #f7efe4 100%);
+            color: var(--app-text);
         }
         .block-container {
             padding-top: 2rem;
             padding-bottom: 2.5rem;
             max-width: 1440px;
+        }
+        .stApp,
+        .stApp p,
+        .stApp label,
+        .stApp span,
+        .stApp li,
+        .stApp div,
+        .stMarkdown,
+        .stText,
+        .stCaption {
+            color: var(--app-text);
+        }
+        .stApp a {
+            color: #7b3f12;
+        }
+        [data-testid="stHeader"] {
+            background: linear-gradient(180deg, #161616 0%, #26201a 100%);
+        }
+        [data-testid="stHeader"] *,
+        [data-testid="stToolbar"] *,
+        [data-testid="stDecoration"] * {
+            color: var(--dark-ui-text) !important;
+            fill: var(--dark-ui-text) !important;
+        }
+        [data-testid="stToolbar"] button,
+        [data-testid="stHeader"] button,
+        [data-testid="stToolbar"] svg,
+        [data-testid="stHeader"] svg {
+            color: var(--dark-ui-text) !important;
+            fill: var(--dark-ui-text) !important;
+            stroke: var(--dark-ui-text) !important;
         }
         [data-testid="stSidebar"] {
             background: linear-gradient(180deg, #161616 0%, #26201a 100%);
@@ -34,15 +73,96 @@ def inject_styles() -> None:
         [data-testid="stSidebar"] * {
             color: #f8efe3;
         }
+        [data-testid="stSidebar"] h1,
+        [data-testid="stSidebar"] h2,
+        [data-testid="stSidebar"] h3,
+        [data-testid="stSidebar"] h4,
+        [data-testid="stSidebar"] h5,
+        [data-testid="stSidebar"] h6,
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
+            color: var(--dark-ui-text) !important;
+        }
+        [data-testid="stSidebar"] .stTextInput input,
+        [data-testid="stSidebar"] .stTextArea textarea,
+        [data-testid="stSidebar"] .stNumberInput input,
+        [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+        [data-testid="stSidebar"] div[data-baseweb="base-input"] > div {
+            background: rgba(255, 248, 239, 0.12);
+            color: var(--dark-ui-text) !important;
+            border: 1px solid rgba(248, 239, 227, 0.22);
+        }
+        [data-testid="stSidebar"] input::placeholder,
+        [data-testid="stSidebar"] textarea::placeholder {
+            color: rgba(220, 236, 255, 0.72) !important;
+        }
+        [data-testid="stSidebar"] label,
+        [data-testid="stSidebar"] .stMarkdown,
+        [data-testid="stSidebar"] .stSelectbox div,
+        [data-testid="stSidebar"] [data-baseweb="select"] span,
+        [data-testid="stSidebar"] [data-baseweb="select"] input,
+        [data-testid="stSidebar"] button,
+        [data-testid="stSidebar"] svg {
+            color: var(--dark-ui-text) !important;
+            fill: var(--dark-ui-text) !important;
+            stroke: var(--dark-ui-text) !important;
+        }
         .hero-card,
         .metric-card,
         .section-card,
         .query-card {
             border: 1px solid rgba(22, 22, 22, 0.08);
             border-radius: 22px;
-            background: rgba(255, 255, 255, 0.82);
+            background: var(--app-surface);
             box-shadow: 0 20px 40px rgba(54, 40, 22, 0.08);
             backdrop-filter: blur(10px);
+        }
+        [data-testid="stExpander"],
+        [data-testid="stAlert"],
+        [data-testid="stDownloadButton"] > button,
+        .stButton > button,
+        .stTextInput input,
+        .stTextArea textarea,
+        .stNumberInput input,
+        .stSelectbox select,
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="base-input"] > div {
+            color: var(--app-text);
+        }
+        .stTextInput input,
+        .stTextArea textarea,
+        .stNumberInput input,
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="base-input"] > div {
+            background: rgba(255, 252, 247, 0.96);
+            border: 1px solid var(--app-border);
+        }
+        .stTextInput label,
+        .stTextArea label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stDownloadButton,
+        .stCheckbox label,
+        .stRadio label {
+            color: var(--app-text) !important;
+            font-weight: 600;
+        }
+        .stButton > button,
+        .stDownloadButton > button {
+            background: #8f5b2e;
+            color: #fff8ef;
+            border: 1px solid #7c4f28;
+        }
+        .stButton > button:hover,
+        .stDownloadButton > button:hover {
+            background: #7c4f28;
+            color: #fff8ef;
+        }
+        [data-testid="stExpander"] summary,
+        [data-testid="stExpander"] summary * {
+            color: var(--app-text) !important;
+        }
+        [data-testid="stAlert"] * {
+            color: inherit;
         }
         .hero-card {
             padding: 1.5rem 1.6rem;
@@ -157,6 +277,9 @@ def inject_styles() -> None:
             border: 1px solid rgba(22, 22, 22, 0.08);
             border-radius: 18px;
             background: rgba(255, 255, 255, 0.72);
+        }
+        code {
+            color: #5d2f0c;
         }
         </style>
         """,
