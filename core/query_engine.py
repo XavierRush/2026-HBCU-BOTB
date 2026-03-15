@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-import anthropic
+try:
+    import anthropic
+except ImportError:  # pragma: no cover
+    anthropic = None
 
 from config import ANTHROPIC_API_KEY, DEBUG_MODE, MODEL_NAME, QUERY_TEMPLATES
 from core.debug_mode import mock_query_response
@@ -28,6 +31,11 @@ def build_queries(product: Product) -> list[str]:
 
 def query_llm(prompt: str) -> str:
     """Send a single query to Claude and return the text response."""
+    if not ANTHROPIC_API_KEY or anthropic is None:
+        raise RuntimeError(
+            "Claude API client not available. Set DEBUG_MODE=1 or install the 'anthropic' package and provide ANTHROPIC_API_KEY."
+        )
+
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     message = client.messages.create(
         model=MODEL_NAME,

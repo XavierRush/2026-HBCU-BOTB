@@ -19,19 +19,18 @@ if (Test-Path ".env") {
     }
 }
 
+if ([string]::IsNullOrWhiteSpace($env:ANTHROPIC_API_KEY)) {
+    Write-Host "No ANTHROPIC_API_KEY found; running in debug/mock mode."
+    [Environment]::SetEnvironmentVariable("DEBUG_MODE", "1", "Process")
+}
+
 $debugEnabled = $env:DEBUG_MODE -eq "1" -or $env:DEBUG_MODE -eq "true" -or $env:DEBUG_MODE -eq "TRUE"
 
 if ($debugEnabled) {
     Write-Host "Debug mode enabled. Starting without Claude API access."
 }
 else {
-    Write-Host "Checking API key..."
-    if ([string]::IsNullOrWhiteSpace($env:ANTHROPIC_API_KEY)) {
-        Write-Host "ERROR: ANTHROPIC_API_KEY environment variable not set."
-        Write-Host "Set it in .env (copy .env.example) or in your shell env."
-        Write-Host "You can also start in debug mode with: `$env:DEBUG_MODE='1'; .\run.ps1"
-        exit 1
-    }
+    Write-Host "Using Claude API with provided key."
 }
 
 Write-Host "Starting AI Visibility Analyzer..."
