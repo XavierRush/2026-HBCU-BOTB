@@ -21,7 +21,7 @@ This prototype helps small/medium businesses understand why their products are i
 | Layer | Technology |
 |---|---|
 | Backend | Python 3.11+ |
-| LLM querying | Anthropic Claude API (`claude-sonnet-4-20250514`) |
+| LLM querying | Anthropic Claude API (`claude-sonnet-4-20250514`) (mock mode used when no API key is provided) |
 | NLP / text comparison | `spaCy`, `sentence-transformers` (cosine similarity) |
 | Data parsing | `pydantic` for product schema validation |
 | Frontend dashboard | Streamlit |
@@ -374,7 +374,6 @@ if run:
 ### Step 7 — Requirements (`requirements.txt`)
 
 ```
-anthropic>=0.25.0
 streamlit>=1.35.0
 pydantic>=2.0.0
 sentence-transformers>=2.7.0
@@ -390,11 +389,9 @@ echo "Installing dependencies..."
 pip install -r requirements.txt --quiet
 python3 -m spacy download en_core_web_sm --quiet
 
-echo "Checking API key..."
 if [ -z "$ANTHROPIC_API_KEY" ]; then
-  echo "ERROR: ANTHROPIC_API_KEY environment variable not set."
-  echo "Run: export ANTHROPIC_API_KEY=your_key_here"
-  exit 1
+  echo "No ANTHROPIC_API_KEY found; running in debug/mock mode."
+  export DEBUG_MODE=1
 fi
 
 echo "Starting AI Visibility Analyzer..."
@@ -412,12 +409,11 @@ echo "App running at http://localhost:8501"
 git clone <your-repo-url>
 cd 2026-HBCU-BOTB
 
-# Create local env file (recommended)
+# Create local env file (optional)
 cp .env.example .env
-# Then edit .env and set ANTHROPIC_API_KEY
+# Edit .env to set ANTHROPIC_API_KEY if you want live Claude responses.
 
-# OR set your API key directly in shell
-export ANTHROPIC_API_KEY=your_key_here
+# OR you can run without a key (the app will use deterministic mock responses)
 
 # Launch everything
 chmod +x run.sh
@@ -440,15 +436,12 @@ On Windows PowerShell, use:
 
 ```powershell
 python -m pip install -r requirements.txt
-$env:DEBUG_MODE="1"
 .\run.ps1
 ```
 
-For live Claude calls on Windows:
+The app will run in mock mode when no `ANTHROPIC_API_KEY` is set. To enable live Claude calls, set the key first:
 
 ```powershell
-# Recommended: copy .env.example to .env and set ANTHROPIC_API_KEY there
-# Or set it directly:
 $env:ANTHROPIC_API_KEY="your_key_here"
 .\run.ps1
 ```

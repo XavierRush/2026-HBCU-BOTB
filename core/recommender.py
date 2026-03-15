@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-import anthropic
+try:
+    import anthropic
+except ImportError:  # pragma: no cover
+    anthropic = None
 
 from config import ANTHROPIC_API_KEY, DEBUG_MODE, MODEL_NAME
 from core.debug_mode import mock_recommendations
@@ -9,7 +12,7 @@ from core.product_schema import Product
 
 def generate_recommendations(product: Product, analysis: dict[str, object]) -> str:
     """Ask Claude for actionable recommendations based on the analysis."""
-    if DEBUG_MODE or not ANTHROPIC_API_KEY:
+    if DEBUG_MODE or not ANTHROPIC_API_KEY or anthropic is None:
         return mock_recommendations(product, analysis)
 
     missing = ", ".join(analysis["missing_features"]) or "none detected"

@@ -12,16 +12,15 @@ if [ -f ".env" ]; then
   set +a
 fi
 
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+  echo "No ANTHROPIC_API_KEY found; running in debug/mock mode."
+  export DEBUG_MODE=1
+fi
+
 if [ "$DEBUG_MODE" = "1" ] || [ "$DEBUG_MODE" = "true" ] || [ "$DEBUG_MODE" = "TRUE" ]; then
   echo "Debug mode enabled. Starting without Claude API access."
 else
-  echo "Checking API key..."
-  if [ -z "$ANTHROPIC_API_KEY" ]; then
-    echo "ERROR: ANTHROPIC_API_KEY environment variable not set."
-    echo "Set it in .env (copy .env.example) or export it in your shell."
-    echo "You can also start in debug mode with: DEBUG_MODE=1 ./run.sh"
-    exit 1
-  fi
+  echo "Using Claude API with provided key."
 fi
 
 echo "Starting AI Visibility Analyzer..."

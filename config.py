@@ -5,7 +5,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover
+    # If python-dotenv isn't installed, we can still run as long as env vars are set.
+    def load_dotenv(*args, **kwargs):
+        return False
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
